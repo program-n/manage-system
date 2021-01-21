@@ -1,12 +1,12 @@
-const express = require('express')
-var mysql = require('mysql'); 
+let express = require('express')
+
 
 // 获取路由器
 let router = express.Router();
 
 
 let controll = require('../controll/cateControll')
-
+let artControll = require('../controll/artControll')
 router.get('/',(req,res)=>{
     res.render('manage.html')
 })
@@ -30,5 +30,8 @@ router.post('/delete',controll.del)
 // 添加
 router.get('/catAdd',controll.catAdd)
 
+// 文章数据接口
+router.get('/artTab',artControll.artData)
 router.post('/postCate',controll.postCate)
+
 module.exports = router;
