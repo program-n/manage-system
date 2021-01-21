@@ -1,0 +1,157 @@
+layui.code
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>layout 后台大布局 - Layui</title>
+  <link rel="stylesheet" href="./public/layui/css/layui.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+ 
+  
+    <!-- 引入左边侧边栏 -->
+    {{ include './common/head.html' }}
+
+    <!-- 引入左边侧边栏 -->
+    {{ include './common/side.html' }}
+
+
+    <div class="layui-body">
+
+      <!-- 内容主体区域 -->
+      <div style="padding: 15px;">
+        <h2>栏目管理</h2>
+        <table class="layui-table" lay-size="sm">
+          <colgroup>
+            <col width="100">
+            <col width="100">
+            <!-- 不写宽度即平分剩余空间 -->
+            <col width="">
+            <col width="">
+            <col width="150">
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th>序号</th>
+              <th>分类名称</th>
+              <th>排序</th>
+              <th>添加时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <button type="button" id="add"  class="layui-btn">
+              <i class="layui-icon">&#xe608;</i> 添加分类
+            </button>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 引入左边侧边栏 -->
+    {{ include './common/footer.html' }}
+
+  </div>
+ 
+</div>
+<script src="./public/layui/layui.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+<script src="/public/js/moment.js"></script>
+<script src="./public/js/util.js"></script>
+<script>
+  //JavaScript代码区域
+layui.use(['element','layer'], function(){
+  var element = layui.element;
+  var layer = layui.layer;
+});
+// 渲染表格
+   function renderTab(data){
+
+     let tbodyHtml = ``;
+       data.forEach((item,index) => {
+        let {name,sort,add_date,cat_id} = item;
+        add_date = util.date_format(add_date,'YYYY-MM-DD')
+         tbodyHtml += `
+         <tr>
+              <td>${index + 1}</td>
+              <td>${name}</td>
+              <td>${sort}</td>
+              <td>${add_date}</td>
+              <td>
+                  <div class="layui-btn-group">
+                    <button title='编辑' type="button" class="layui-btn "><i class="layui-icon">&#xe642;</i></button>
+
+                    <button title='删除' cat_id='${cat_id}' type="button" class="layui-btn layui-btn-danger delete"><i class="layui-icon">&#xe640;</i></button>
+                  </div>
+              </td>
+            </tr>
+         `;
+             // cat_id 通过记录当前要删除的数据id来删除对应数据数据
+         $('#tbody').html(tbodyHtml)
+       });
+   }
+
+   // 发起ajax请求获取数据
+  function  initCateData(){
+    $.ajax({
+          url:'/getCateData',
+          dataType:'json'
+     }).then(res=>{
+          renderTab(res)
+     })
+  }
+  initCateData()
+
+// 删除表格数据
+$('#tbody').on('click','.delete',function(){
+  var _this = $(this)
+         // 获取id
+         let cat_id = $(this).attr('cat_id')
+         // 获取提示信息，是否删除
+   
+         layer.confirm('确认删除吗', {
+        btn: ['确定','取消'] 
+      }, function(){
+        // 发送ajax请求删除数据
+        $.ajax({
+          type:'post',
+          url:"delete",
+          data:{cat_id},
+          dataType:"json"
+        }).then(res=>{ 
+          // 解构服务器反馈数据
+            let {errcode,message} = res; 
+            //  删除成功
+            if(errcode == 0){
+              _this.parents('tr').remove();
+              // 关闭确认框,移除掉tr
+              layer.closeAll(); // 关闭所有数据 
+              // 给序号重新排序
+              $.each($("#tbody tr").find('td:eq(0)'),function(num,value){
+                  $(ele).html(num + 1)
+              })
+              
+              layer.msg(message)
+            }
+        }).catch(err=>{
+          layer.closeAll(); //关闭所有数据
+        })
+      });
+    })
+
+$('#add').on('click',function(){
+  location.href = '/catAdd'
+})
+
+</script>
+
+
+
+
+
+</body>
+</html>
