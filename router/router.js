@@ -23,7 +23,7 @@ router.get('/catIndex',controll.catIndex);
 router.get('/artIndex',controll.artIndex);
 
 router.get('/getCateData',controll.getCateData)
-
+router.get('/artTab',artControll.artData)
 router.get('/getOneCate',controll.getOneCate)
 // 删除数据的接口
 router.post('/delete',controll.del)
@@ -31,7 +31,12 @@ router.post('/delete',controll.del)
 router.get('/catAdd',controll.catAdd)
 
 // 文章数据接口
-router.get('/artTab',artControll.artData)
-router.post('/postCate',controll.postCate)
 
+router.post('/postCate',controll.postCate)
+router.post('/addArt',artControll.artPost)
+// 文章编辑
+router.get('/artedit',artControll.artedit)
+// 删除文章
+router.post('/delArt',artControll.artDel)
+router.post('/postArt',artControll.postArt)
 module.exports = router;

@@ -23,5 +23,32 @@ let result = await Promise.all([pro1,pro2])
     res.json(response)
     
 }
+artControll.artDel =async (req,res)=>{
+    let {art_id} = req.body;
+    let sql = `delect from article  where art_id = ${art_id}`;
+    let result =await model(sql);
+    if(result.affectedRows){
+        res.json(delsucc)
+    }else{
 
+      res.json(delfail)
+    }
+}
+artControll.artPost = async (req,res)=>{
+    let {title,cat_data,status,content} = req.body;
+    let sql = `insert into artcile(title,content,status) values('${title}',${content},'${cat_data}','${status}')`
+    let result = await model(sql);
+    if(result.affectedRows){
+        res.json(addsucc)
+    }else{
+        res.json(addfail)
+    }
+}
+
+artControll.artedit = (req,res)=>{
+    res.render('artedit.html')}
+
+artControll.postArt = (req,res)=>{
+
+}
 module.exports = artControll;

@@ -5,6 +5,7 @@ layui.code
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>layout 后台大布局 - Layui</title>
+  <link rel="stylesheet" href="../public/css/nprogress.css">
   <link rel="stylesheet" href="./public/layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
@@ -18,9 +19,14 @@ layui.code
 
 
   <div class="layui-body">
+    <div style="padding: 15px;"></div>
     <h1>文章管理</h1>
     <!-- 内容主体区域 -->
-    <table id="demo" lay-filter="test"></table>
+    <table id="demo" lay-filter="test">
+      <button type="button" id="add"  class="layui-btn">
+        <i class="layui-icon">&#xe608;</i> 添加文章
+      </button>
+    </table>
 
     <script type="text/html" id="barDemo">
       <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
@@ -32,14 +38,27 @@ layui.code
    {{include'./common/footer.html' }}
  
 </div>
+<script src="/public/js/moment.js"></script>
+<script src="/public/js/jquery.js"></script>
 <script src="./public/layui/layui.js"></script>
+<script src="/public/js/util.js"></script>
+<script src="/public/js/nprogress.js"></script>
 <script>
+
+  NProgress.set(0.3)
+  let interval = setInterval(function(){
+    NProgress.inc();
+  },500)
+  $(window).on('load',()=>{
+    clearInterval(interval)
+    NProgress.done();   
+  })
 //JavaScript代码区域
 layui.use(['element','table'], function(){
   var element = layui.element;
   var table = layui.table;
 
-  table.render({
+let tableUI =  table.render({
     elem: '#demo'
     ,height: 312
     ,url: '/artTab' //数据接口
@@ -63,8 +82,46 @@ layui.use(['element','table'], function(){
       ,{field: 'right', title: '操作',toolbar:'#barDemo', width: 135,}
     ]],
   });
-  
+    //监听工具条 
+table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+ let {data,event} = obj;
+ let {art_id} = data
+ switch(event){
+    case' del':
+     del()
+     break;
+     case 'edit':
+       edit(art_id)
+       break;
+ }
+ 
 });
+     function del(art_id){
+       layer.confirm('是否删除？',{
+         btn:['确定','取消']
+       },function(){
+         $.ajax({
+           type:'post',
+           url:'/delArt',
+           data:{art_id},
+           success(res){
+             let {errcode,messasge} = res;
+             layer.closeAll();
+             if(errcode == 0){
+               tableUI.reload();
+               layer.msg(message)
+             }
+           }
+         })
+       })
+     }
+     function edit(art_id){
+        location.href = `/artedit?art_id=${art_id}`
+     }
+     $('#add').on('click',function(){
+       location.href = '/art_add'
+     })
+    });
 
 </script>
 </body>
