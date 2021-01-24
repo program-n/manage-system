@@ -1,10 +1,13 @@
+
+const { O_WRONLY } = require('constants');
+const fs = require('fs')
 let artControll = {};
 let articleData = require('../mockArticle/article.json')
 const model = require('../model/model.js')
 artControll.artData =async (req,res)=>{
     let {page,limit:pagesize} = req.query;
     let offset = (page - 1)*pagesize;
-    let sql = `select * from article limit ${offset},${pagesize}`
+    let sql = `select t1.*,t2.name from article t1 left join category t2 on ti.cat_id = t2.cat_id limit ${offset},${pagesize}`
     let sql2 = `select count(*) as count from article`// 数据的条数
  
 
@@ -35,8 +38,8 @@ artControll.artDel =async (req,res)=>{
     }
 }
 artControll.artPost = async (req,res)=>{
-    let {title,cat_data,status,content} = req.body;
-    let sql = `insert into artcile(title,content,status) values('${title}',${content},'${cat_data}','${status}')`
+    let {title,cat_data,status,content,cover,publih_date} = req.body;
+    let sql = `insert into artcile(title,content,cat_id,status,cover,publish_date) values('${title}',${content},'${cat_data}','${status}','${cover}',now())`
     let result = await model(sql);
     if(result.affectedRows){
         res.json(addsucc)
@@ -50,5 +53,41 @@ artControll.artedit = (req,res)=>{
 
 artControll.postArt = (req,res)=>{
 
+}
+
+// 上传
+artControll.upload = (req,res)=>{
+    if(req.file){
+        // 进行文件的重命名即可 fs.rename
+        let {originalname,destination,filename} = req.file;
+        let dotIndex = originalname.lastIndexOf('.');
+        let ext = originalname.substring(dotIndex);
+        let oldPath = `${destination}${filename}`;
+        let newPath = `${destination}${filename}${ext}`;
+        fs.rename(oldPath,newPath,err=>{
+            if(err){ throw err; }
+            res.json({code:0,message:'上传文件成功',src:newPath})
+        })
+    }else{
+        res.json({code:1,message:'上传文件失败',src:''})
+    }
+}
+// 请求接口
+artControll.updStatus =async(req,res)=>{
+    let {art_id,status} = req.body;
+    let sql = `update article set status = ${status} where art_id = ${art_id}`
+    let result = await model(sql)
+    if(result.affectedRows){
+        res.json(updsucc)
+    }else{
+        res.json(updfail)
+    }
+}
+// 获取单条文章
+artControll.getOneArt =async (req,res)=>{
+    let {art_id} = req.query;
+    let sql = `select * from article where art_id = ${art_id}`;
+    let result = await model(sql)
+    res.json(result[0] || {})
 }
 module.exports = artControll;

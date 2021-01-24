@@ -1,6 +1,7 @@
 let express = require('express')
 
-
+var multer = require('multer')
+var upload =multer({dest:'uploads'})
 // 获取路由器
 let router = express.Router();
 
@@ -39,4 +40,10 @@ router.get('/artedit',artControll.artedit)
 // 删除文章
 router.post('/delArt',artControll.artDel)
 router.post('/postArt',artControll.postArt)
+// 图片
+router.post('/upload',upload.single('file'),artControll.upload)
+// 获取单条文章
+router.get('/getOneArt',artControll.getOneArt)
+// 修改状态
+router.post('/updStatus',artControll.updStatus)
 module.exports = router;

@@ -1,128 +1,199 @@
 layui.code
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>layout 后台大布局 - Layui</title>
   <link rel="stylesheet" href="../public/css/nprogress.css">
   <link rel="stylesheet" href="./public/layui/css/layui.css">
+  <link rel="stylesheet" href="/public/css/lightbox.css">
 </head>
+
 <body class="layui-layout-body">
-<div class="layui-layout layui-layout-admin">
- 
+  <div class="layui-layout layui-layout-admin">
+
     <!-- 引入头部导航栏 -->
     {{include'./common/head.html' }}
 
- <!-- 引入侧边导航栏 -->
-  {{include'./common/side.html' }}
+    <!-- 引入侧边导航栏 -->
+    {{include'./common/side.html' }}
 
 
-  <div class="layui-body">
-    <div style="padding: 15px;"></div>
-    <h1>文章管理</h1>
-    <!-- 内容主体区域 -->
-    <table id="demo" lay-filter="test">
-      <button type="button" id="add"  class="layui-btn">
-        <i class="layui-icon">&#xe608;</i> 添加文章
-      </button>
-    </table>
+    <div class="layui-body">
+      <div style="padding: 15px;"></div>
+      <h1>文章管理</h1>
+      <!-- 内容主体区域 -->
+      <table id="demo" lay-filter="test">
+        <button type="button" id="add" class="layui-btn">
+          <i class="layui-icon">&#xe608;</i> 添加文章
+        </button>
+      </table>
 
-    <script type="text/html" id="barDemo">
+      <!-- <script type="text/html" id="barDemo">
       <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
       <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
       <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
+    </script> -->
+    </div>
+    <!-- 引入头部导航栏 -->
+    {{include'./common/footer.html' }}
+
   </div>
-   <!-- 引入头部导航栏 -->
-   {{include'./common/footer.html' }}
- 
-</div>
-<script src="/public/js/moment.js"></script>
-<script src="/public/js/jquery.js"></script>
-<script src="./public/layui/layui.js"></script>
-<script src="/public/js/util.js"></script>
-<script src="/public/js/nprogress.js"></script>
-<script>
+  <script src="/public/js/moment.js"></script>
+  <script src="/public/js/jquery.js"></script>
+  <script src="./public/layui/layui.js"></script>
+  <script src="/public/js/util.js"></script>
+  <script src="/public/js/nprogress.js"></script>
+  <script src="/public/js/lightbox-plus-jquery.min.js"></script>
+  <script>
 
-  NProgress.set(0.3)
-  let interval = setInterval(function(){
-    NProgress.inc();
-  },500)
-  $(window).on('load',()=>{
-    clearInterval(interval)
-    NProgress.done();   
-  })
-//JavaScript代码区域
-layui.use(['element','table'], function(){
-  var element = layui.element;
-  var table = layui.table;
+    NProgress.set(0.3)
+    let interval = setInterval(function () {
+      NProgress.inc();
+    }, 500)
+    $(window).on('load', () => {
+      clearInterval(interval)
+      NProgress.done();
+    })
+    //JavaScript代码区域
+    layui.use(['element', 'table'], function () {
+      var element = layui.element;
+      var table = layui.table;
 
-let tableUI =  table.render({
-    elem: '#demo'
-    ,height: 312
-    ,url: '/artTab' //数据接口
-    ,page: true //开启分页
-    ,cols: [[ //表头
-      {field: 'art_id', title: 'ID', width:80, sort: true, fixed: 'left'}
-      ,{field: 'title', title: '标题', width:80}
-      ,{field: 'content', title: '内容', width:80} 
-      ,{field: 'cat_id', title: '所属分类', width:80, sort: true}
-      ,{field: 'author', title: '作者', width:80} 
-      ,{field: 'cover', title: '封面', width: 177}
-      ,{field: 'status', title: '状态', width: 80, sort: true,templet:(item)=>{
-        let statusMap = {
-          '0':'未发布',
-          '1':'已发布',
-          '2':'审核中'
+      let tableUI = table.render({
+        elem: '#demo'
+        , height: 312
+        , url: '/artTab' //数据接口
+        , page: true //开启分页
+        , cols: [[ //表头
+          { field: 'art_id', title: 'ID', width: 80, sort: true, fixed: 'left' }
+          , { field: 'title', title: '标题', width: 80 }
+          , { field: 'content', title: '内容', width: 80, hide: true }
+          , { field: 'cat_id', title: '所属分类', width: 80, sort: true }
+          , { field: 'author', title: '作者', width: 80 }
+          , {
+            field: 'cover', title: '封面', width: 177,
+            templet({ cover }) {
+              let imgStr = `<a class="example-image-link" href="${cover}" data-lightbox="example-1"></a>`
+              return imgStr
+            },
+          }
+          , {
+            field: 'status', title: '状态', width: 80, sort: true, templet: (item) => {
+              let statusMap = {
+                '0': '<span class="layui-badge layui-bg-blue">未发布</span>',
+                '1': '<span class="layui-badge layui-bg-green">已发布(通过)</span>',
+                '2': '<span class="layui-badge layui-bg-red">不通过</span>'
+
+              }
+              return statusMap[item.status]
+            }
+          }
+          , { field: 'publish_data', title: '发布时间', width: 80, sort: true }
+          , {
+            field: 'right', title: '操作', width: 135,
+            templet({ status }) {
+              let str = `<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>`
+
+              switch (status) {
+                case 0:
+                  str += ` <a class="layui-btn layui-bg-orange layui-btn-xs" lay-event="verify">审核中-${status}</a>`
+                  break;
+
+              }
+
+
+
+              str = `
+            <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+           <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            `
+              return str
+            }
+          }
+        ]],
+      });
+      //监听工具条 
+      table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+        let { data, event } = obj;
+        let { art_id, content } = data
+        switch (event) {
+          case ' del':
+            del()
+            break;
+          case 'edit':
+            edit(art_id)
+            break;
+          case 'verify':
+            verify(art_id)
+            break;
+          case 'show':
+            showContent(content)
+            break
         }
-        return statusMap[item.status]
-      }}
-      ,{field: 'publish_data', title: '发布时间', width: 80, sort: true}
-      ,{field: 'right', title: '操作',toolbar:'#barDemo', width: 135,}
-    ]],
-  });
-    //监听工具条 
-table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
- let {data,event} = obj;
- let {art_id} = data
- switch(event){
-    case' del':
-     del()
-     break;
-     case 'edit':
-       edit(art_id)
-       break;
- }
- 
-});
-     function del(art_id){
-       layer.confirm('是否删除？',{
-         btn:['确定','取消']
-       },function(){
-         $.ajax({
-           type:'post',
-           url:'/delArt',
-           data:{art_id},
-           success(res){
-             let {errcode,messasge} = res;
-             layer.closeAll();
-             if(errcode == 0){
-               tableUI.reload();
-               layer.msg(message)
-             }
-           }
-         })
-       })
-     }
-     function edit(art_id){
+
+      });
+      function del(art_id) {
+        layer.confirm('是否删除？', {
+          btn: ['确定', '取消']
+        }, function () {
+          $.ajax({
+            type: 'post',
+            url: '/delArt',
+            data: { art_id },
+            success(res) {
+              let { errcode, messasge } = res;
+              layer.closeAll();
+              if (errcode == 0) {
+                tableUI.reload();
+                layer.msg(message)
+              }
+            }
+          })
+        })
+      }
+      function edit(art_id) {
         location.href = `/artedit?art_id=${art_id}`
-     }
-     $('#add').on('click',function(){
-       location.href = '/art_add'
-     })
+      }
+      function verify(art_id) {
+        layer.confirm('是否通过？', {
+          btn: ['通过', '审核失败']
+        }, function () {
+          updArtStatus(art_id, 1)
+        }, function () {
+          updArtStatus(art_id, 2)
+        }
+        )
+      }
+
+      function updArtStatus(art_id, status) {
+        $.post('/updstatus', { art_id, status }, ({ errcode, message }) => {
+          if (errcode == 0) {
+            tableUI.reload();
+
+          }
+          layer.msg()
+        })
+      }
+      // 查看内容
+      function showContent(content) {
+        layer.open({
+          type: 1,
+          skin: 'layui-layer-rim',
+          area: ['1000px', '800px'],
+          content: "<div sytle='padding:20px'>" + content + "</div>"
+        })
+      }
+
+      $('#add').on('click', function () {
+        location.href = '/art_add'
+      })
     });
 
-</script>
+  </script>
 </body>
+
 </html>
