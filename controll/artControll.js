@@ -1,14 +1,17 @@
 
-const { O_WRONLY } = require('constants');
 const fs = require('fs')
 let artControll = {};
 let articleData = require('../mockArticle/article.json')
 const model = require('../model/model.js')
 artControll.artData =async (req,res)=>{
-    let {page,limit:pagesize} = req.query;
+    let {page,limit:pagesize,title,status} = req.query;
+  
+     let where = 'where 1'
+     title && (where += `and t1.title like '%${title}%'`)
+     status && (where += `and t1.status='${status}' `)
     let offset = (page - 1)*pagesize;
-    let sql = `select t1.*,t2.name from article t1 left join category t2 on ti.cat_id = t2.cat_id limit ${offset},${pagesize}`
-    let sql2 = `select count(*) as count from article`// 数据的条数
+    let sql = `select t1.*,t2.name from article t1 left join category t2 on ti.cat_id = t2.cat_id ${where} order by t1.art_id desc limit ${offset},${pagesize}`
+    let sql2 = `select count(*) as count from article t1 ${where}`// 数据的条数
  
 
 let pro1 = model(sql)
@@ -47,13 +50,24 @@ artControll.artPost = async (req,res)=>{
         res.json(addfail)
     }
 }
+artControll.postArt = async (req,res)=>{
+    let {title,cat_id,status,content,cover} = req.body;
+    let username = req.session.userInfo.username
+    let sql = `insert into article(title,content,author,cat_id,status,cover,publish_date)
+                values('${title}','${content}','${username}',${cat_id},${status},'${cover}',now())
+                `;
+    let result = await model(sql)
+    if(result.affectedRows){
+        res.json(addsucc)
+    }else{
+        res.json(addfail)
+    }
 
+}
 artControll.artedit = (req,res)=>{
     res.render('artedit.html')}
 
-artControll.postArt = (req,res)=>{
 
-}
 
 // 上传
 artControll.upload = (req,res)=>{
@@ -89,5 +103,29 @@ artControll.getOneArt =async (req,res)=>{
     let sql = `select * from article where art_id = ${art_id}`;
     let result = await model(sql)
     res.json(result[0] || {})
+}
+// 编辑文章
+ artControll.updart =async (req,res)=>{
+     // 接受数据
+     let {oldCover,title,cat_id,art_id,cover,content,status} = req.body;
+     let sql;
+       if(cover){
+        sql = `update article set title='${title}',content='${content}',cover='${cover}',
+        cat_id='${cat_id}',status='${status}' where art_id = ${art_id}
+`
+    }
+       else{
+        sql = `update article set title='${title}',content='${content}',
+        cat_id='${cat_id}',status='${status}' where art_id = ${art_id}
+`
+       }
+     let result = await model(sql)
+     if(result.affectedRows){
+         
+        cover && fs.unlinkSync(oldCover)
+        res.json(updsucc)
+     }else{
+         res.json(updfail)
+     }
 }
 module.exports = artControll;

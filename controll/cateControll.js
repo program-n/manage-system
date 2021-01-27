@@ -71,7 +71,7 @@ controll.postCate = async (req,res)=>{
 }
 // 编辑
 controll.cateUp = (req,res)=>{
-    r
+    
     es.render('category_edit.html')
 }
 controll.updCate = async (req,res)=>{

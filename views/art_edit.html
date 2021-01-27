@@ -132,7 +132,9 @@
       form.on('submit(formDemo)', function (data) {
         let formData = data.filed;
         formData.content = editor.txt.html();
-        $.post('postArt', formData, ({ errcode, message }) => {
+        formData.art_id = art_id;
+        formData.oldCover = oldCover;
+        $.post('/updArt', formData, ({ errcode, message }) => {
           if (errcode == 0) {
             location.href = '/article_index'
           }
@@ -158,11 +160,12 @@
         }, 'json')
       }
       loadAll()
-
+let oldCover;
       function getNow() {
         $.get('/getOneArt', { art_id }, (res) => {
           let { title, content, status, cover, cat_id } = res;
           cover && $('#preview').attr('src', cover)
+          oldCover = cover;
           editor.txt.html(content)
           form.val('formDemo', {
             title,

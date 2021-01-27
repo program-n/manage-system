@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-
+let session = require('express-session');
 
 // 导入路由模块
 const router = require('./router/router.js')
@@ -26,6 +26,36 @@ app.engine('html', express_template);
 
 //使用模板引擎扩展名为html
 app.set('view engine', 'html');
+
+
+
+let options = {
+    name :"session",
+    secret: 'ffrggrdvd',
+    cookie: {
+        httpOnly :true,
+        secure: false,
+        maxAge:60000*24
+    }
+}
+app.use(session(options))
+app.use(function(req,res,next){
+    let path = req.path.toLowerCase();
+
+    let unNeed = ['/login','/signin','/logout'];
+    if(unNeed.includes(path)){
+        next();
+    }else{
+        if(req.session.userInfor){
+           next()
+        }else{
+            res.redirect('/login')
+            next()
+        }
+    }
+ 
+})
+
 
 // 使用路由中间件 req.body
 app.use(router)
