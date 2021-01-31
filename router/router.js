@@ -91,6 +91,9 @@ router.get('/catAdd',controll.catAdd)
      res.json({message:'退出成功'})
  })
 
- // 统计文章种类
-
+// 用户资料修改
+// 头像
+router.post('/revise',userControll.revise)
+// 其他
+router.post('/postUser',userControll.postUser)
 module.exports = router;
