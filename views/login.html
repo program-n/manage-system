@@ -206,7 +206,7 @@ a{color:inherit;text-decoration:none}
                         <label for="pass" class="label">邮箱地址</label>
                         <input id="pass" type="text" class="input">
                     </div>
-                    <div class="group">
+                     <div class="group">
                         <input type="submit" class="button" value="注册">
                     </div>
                     <div class="hr"></div>
@@ -239,10 +239,11 @@ a{color:inherit;text-decoration:none}
         // 发送请求
         $.post('/signin',{username,password},(res)=>{
              layer.close(index)
-             let {errcode,message} = res;
+             let {errcode,message,userInfor} = res;
+             let {username,avatar,last_login_date} = userInfor
              if(errcode == 10009){
-                 layer.msg(`欢迎：${username}`)
-                 localStorage.setItem('username',username)
+                 layer.msg(`欢迎：${userInfor.username}`)
+                 localStorage.setItem('useInfor',JSON.stringify(userInfor))
                  location.href = '/'
              }else{
                 layer.msg(`欢迎：${username}`)
