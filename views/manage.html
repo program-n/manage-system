@@ -19,6 +19,7 @@ layui.code
 
   <div class="layui-body">
     <!-- 内容主体区域 -->
+    <h4 id="last_login_date" style="padding: 15px"></h4>
     <div style="padding: 15px;display:flex" >
       <div id="cate" style="width: 600px;height:400px;"></div>
       <div id="art" style="width: 600px;height:400px;"></div>
@@ -108,7 +109,11 @@ $.get('/cateCount',(res)=>{
       myChart.setOption(option);
   }
 
- 
+ // 显示用户信息
+ let userInfor = JSON.parse( localStorage.getItem('userInfor') || '{}');
+ let last_login_date = util.date_format(userInfor.last_login_date);
+ let str = `上一次登录时间为： ${last_login_date}`
+$('#last_login_date').html(str)
 </script>
 </body>
 </html>

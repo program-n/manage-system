@@ -1,7 +1,6 @@
 {
   "name": "code",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,5 +16,15 @@
     "md5": "^2.3.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/program-n/manage-system.git"
+  },
+  "bugs": {
+    "url": "https://github.com/program-n/manage-system/issues"
+  },
+  "homepage": "https://github.com/program-n/manage-system#readme",
+  "description": ""
 }

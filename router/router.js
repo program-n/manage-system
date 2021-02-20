@@ -92,6 +92,7 @@ router.get('/catAdd',controll.catAdd)
  })
 
 // 用户资料修改
+router.post('/updateAvatar',userControll.updateAvatar)
 // 头像
 router.post('/revise',userControll.revise)
 // 其他

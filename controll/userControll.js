@@ -14,13 +14,13 @@ userControll.signin =async (req,res)=>{
          // 储存信息
          let userInfor = data[0];
          req.session.userInfor = userInfor;
-         res.json({errcode:10009,message:'登陆成功'})
+
+         let sql = `update users set last_login_date = now() where user_id = ${userInfor.user_id}`
+         res.json({errcode:10009,message:'登陆成功',data:userInfor})
      }else{
          res.json({errcode:10010,message:'登陆失败'})
      }
-
-
-}
+    }
 
 
 userControll.revise = (req,res)=>{
@@ -41,7 +41,7 @@ userControll.revise = (req,res)=>{
     }
 }
  // 个人资料更改
-artControll.postArt = async (req,res)=>{
+ userControll.postUser = async (req,res)=>{
     let {user_id,username,avatar} = req.body;
     let username = req.session.userInfo.username
     let sql = `insert into article(user_id,username,avatat)
@@ -55,4 +55,17 @@ artControll.postArt = async (req,res)=>{
     }
 
 }
-module.exports = userControll;
+userControll.updateAvatar = async (req,res)=>{
+    let {avatar} = req.body;
+    let user_id = req.session.userInfor.user_id;
+    let sql = `update users set avatar = '${avatar}' where user_id = ${user_id}`;
+    let result = await model(sql);
+    if(result.affectedRows){
+        res.json({code:0,message:'修改头像成功'})
+    }else{
+        res.json({code:1,message:'修改头像失败'})
+    }
+} 
+
+
+module.exports = userControll

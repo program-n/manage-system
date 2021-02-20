@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        li{
+            list-style-type: none;
+        }
+        body {
+            background-color: #ccc;
+            height: 1400px;
+        }
+        .left {
+            position: absolute;
+            margin-top: 0px;
+            margin-left: 110px;
+            width: 250px;
+            height: 1500px;
+            background-color: #fff;
+        }
+        .right{
+            width: 960px;
+            height: 1500px;
+            background-color: #fff;
+            position: absolute;
+            margin-top: 0px;
+            margin-left: 375px;
+        }
+        .avatar{
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 50px auto;
+        }
+        .avatar img{
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+        }
+        .pag{
+            width: 100%;
+            height: 70px;
+        }
+        .pag ul li{
+            float: left;
+            margin-left: 39px;
+        }
+        .pag ul li p:nth-child(2){
+            color: #ccc;
+            text-align: center;
+        }
+        .arti{
+            width: 100%;
+        }
+        .arti ul li{
+            margin-top: 15px;
+            font-size: 18px;
+            color: #b1aeae;
+            text-align: center;
+        }
+       .arti ul li:hover{
+           color: #fff;
+           border-radius: 15px;
+           cursor: pointer;
+           background-color: rgb(175, 70, 70);
+       }
+       .search{
+           margin-top: 30px;
+           width: 100%;
+       }
+       .search input{
+           width: 100%;
+           height: 50px;
+           border: 0;
+           outline: 0;
+           box-shadow:1px 2px 3px 4px #ccc;
+           border-radius: 10px;
+           font-size: 15px;
+           padding: 0 20px;
+           box-sizing: border-box;
+       }
+       .sym{
+           margin-top: 30px;
+           width: 100%;
+           height: 125px;
+           box-shadow:1px 2px 3px 4px #ccc;
+           border-radius: 8px;
+       }
+       .sym ul li{
+           margin-top: 10px;
+           margin-left: 18px;
+           float: left;
+       }
+       .sym ul li img{
+           width: 40px;
+           height: 40px;
+       }
+       .kind{
+           position: relative;
+           width: 100%;
+           height: 400px;
+           box-shadow:1px 2px 3px 4px #ccc;
+           border-radius: 8px;
+           margin-top: 30px;
+       }
+       .kind p{
+           position: absolute;
+           height: 30px;
+           font-size: 20px;
+           line-height: 30px;
+           margin-left: 5px;
+           margin-top: 10px;
+       }
+       .kind ul{
+           padding-top: 40px;
+       }
+       .kind ul li{
+           margin-top: 20px;
+           height: 22px;
+           
+           border-top: 1px solid #ccc;
+           color: #ccc;
+           padding-left: 10px;
+       }
+       .brief{
+           width: 100%;
+           height: 100px;
+           box-shadow:1px 2px 3px 4px #ccc;
+           border-radius: 8px;
+           margin-top: 30px;
+       }
+       .brief ul li{
+           margin-top: 10px;
+           float: left;
+           font-size: 14px;
+           width: 60px;
+           height: 22px;
+           background-color: skyblue;
+           margin-left: 10px;
+           color: green;
+           text-align: center;
+           border-radius: 20px;
+       }
+       .cover{
+           margin-top: 25px;
+           width: 910px;
+           margin-left: 25px;
+       }
+       .cover img{
+           width: 910px;
+           height: 600px;
+           border-radius: 12px;
+       }
+       .cover div{
+           margin-top: 8px;
+           width: 100%;
+           height: 55px;
+
+       }
+       .cover div ul li{
+           float: left;
+           font-size: 14px;
+           margin-left: 20px;
+           color: hotpink;
+           text-align: center;
+           height: 30px;
+           line-height: 30px;
+           border-radius: 12px;
+           padding: 0px 10px;
+       }
+       .cover div ul li:first-child{
+           background-color: pink;
+       }
+       .cover div ul li:nth-child(2){
+           background-color: rgb(124, 202, 124);
+       }
+       .cover div ul li:nth-child(3){
+           background-color: yellow;
+       }
+    </style>
+</head>
+<body>
+    <div class="left">
+        <div class="avatar">
+            <img src="../public/lightbox(图片灯箱)/2.jpg" alt="">
+        </div>
+        <div class="pag">
+            <ul>
+                <li>
+                    <p>文章</p>
+                    <p>58</p>
+                </li>
+                <li>
+                    <p>标签</p>
+                    <p>4</p>
+                </li>
+                <li>
+                    <p>分类</p>
+                    <p>5</p>
+                </li>
+            </ul>
+        </div>
+        <div class="arti">
+            <ul>
+                <li>文章分类</li>
+                <li>文章列表</li>
+                <li>文章详情</li>
+            </ul>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="搜索">
+        </div>
+        <div class="sym">
+            <ul>
+                <li>
+                 <img src="../public/images/QQ.svg" alt="">
+                </li>
+                <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+                   <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+                   <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+            </ul>
+            <ul>
+                <li>
+                 <img src="../public/images/QQ.svg" alt="">
+                </li>
+                <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+                   <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+                   <li>
+                    <img src="../public/images/QQ.svg" alt="">
+                   </li>
+            </ul>
+        </div>
+        <div class="kind">
+            <p>文章分类</p>
+            <ul>
+                <li>产品</li>
+                <li>健康</li>
+                <li>全干</li>
+                <li>前端与设计</li>
+                <li>后端</li>
+                <li>心理学</li>
+                <li>生活</li>
+                <li>随心</li>
+            </ul>
+        </div>
+        <div class="brief">
+            <ul>
+                <li># 指南</li>
+                <li># 主题</li>
+                <li># 人文</li>
+            </ul>
+            <ul>
+                <li># 社会</li>
+                <li># 自学</li>
+                <li># 设计</li>
+            </ul>
+            <ul>
+                <li># 烂漫</li>
+                <li># 唯心</li>
+                <li># 方案</li>
+            </ul>
+        </div>
+    </div>
+    <div class="right">
+        <div class="cover">
+            <img src="../public/lightbox(图片灯箱)/2.jpg" alt="">
+            <div>
+                <ul>
+                    <li>2021年02月16日</li>
+                    <li>1.4k字</li>
+                    <li>大概5分钟</li>
+                </ul>
+            </div>
+            <div class="read">
+                ————《心灵猎手》观后感
+            </div>
+        </div>
+        <div class="cover">
+            <img src="../public/images/5c3aec85a4343.jpg" alt="">
+            <div>
+                <ul>
+                    <li>2021年02月16日</li>
+                    <li>1.4k字</li>
+                    <li>大概5分钟</li>
+                </ul>
+            </div>
+            <div class="read">
+                ————《心灵猎手》观后感
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>
