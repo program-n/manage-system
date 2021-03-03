@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>layout 后台大布局 - Layui</title>
-  <link rel="stylesheet" href="/public/layui/css/layui.css">
+  <link rel="stylesheet" href="../public/layui/css/layui.css">
 </head>
 
 <body class="layui-layout-body">
@@ -17,41 +17,38 @@
 
     <!-- 引入左边侧边栏 -->
     {{ include './common/side.html' }}
-
     <div class="layui-body">
       <!-- 内容主体区域 -->
       <div style="padding: 15px;">
-        <form class="layui-form" action="">
-          <!-- <input type="hidden" name="cat_id" value=''> -->
-          <div class="layui-form-item">
-            <label class="layui-form-label">分类名称：</label>
-            <div class="layui-input-inline">
-              <input type="text" name="name" lay-verify="required" placeholder="分类名称" autocomplete="off"
-                class="layui-input">
-            </div>
-          </div>
-          <div class="layui-form-item">
-            <label class="layui-form-label">排序：</label>
-            <div class="layui-input-inline">
-              <input type="number" name="sort" required lay-verify="number" autocomplete="off" class="layui-input">
-            </div>
-          </div>
-          <div class="layui-form-item">
-            <label class="layui-form-label">添加时间：</label>
-            <div class="layui-input-inline">
-              <input type="text" id="add_date" name="add_date" required lay-verify="required" autocomplete="off"
-                class="layui-input">
-            </div>
-          </div>
-
-
-          <div class="layui-form-item">
-            <div class="layui-input-block">
-              <button class="layui-btn" lay-submit lay-filter="formDemo">编辑</button>
-              <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
-          </div>
-        </form>
+          <form class="layui-form" action="">
+             <!-- <input type="hidden" name="cat_id" value=''> -->
+              <div class="layui-form-item">
+                <label class="layui-form-label">分类名称：</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="name" lay-verify="required" placeholder="分类名称" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                  <label class="layui-form-label">排序：</label>
+                  <div class="layui-input-inline">
+                    <input type="number" name="sort"  required  lay-verify="number"  autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+              <div class="layui-form-item">
+                  <label class="layui-form-label">添加时间：</label>
+                  <div class="layui-input-inline">
+                    <input type="text"  id="add_date"  name="add_date" required  lay-verify="required"  autocomplete="off" class="layui-input">
+                  </div>
+              </div>
+                          
+             
+              <div class="layui-form-item">
+                <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit lay-filter="formDemo">编辑</button>
+                  <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+              </div>
+          </form>
       </div>
     </div>
 
@@ -59,10 +56,10 @@
     {{ include './common/footer.html' }}
 
   </div>
-  <script src="/public/layui/layui.js"></script>
-  <script src="/public/js/jquery.js"></script>
-  <script src="/public/js/moment.js"></script>
-  <script src="/public/js/util.js"></script>
+  <script src="../public/layui/layui.js"></script>
+  <script src="../public/js/jquery.js"></script>
+  <script src="../public/js/moment.js"></script>
+  <script src="../public/js/util.js"></script>
   <script>
 
     let url = location.href
@@ -71,9 +68,10 @@
     let [, cat_id] = [...reg.exec(url)];
 
     $.ajax({
-      url: '/getOneData?cat_id=' + cat_id,
+      url: '/getOneCate?cat_id=' + cat_id,
       dataType: 'json'
     }).then(res => {
+      console.log(res);
       let { errcode, name, sort, add_date, cat_id } = res;
       add_date = util.date_format(add_date);
       if (errcode == 3) {

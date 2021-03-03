@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  <link rel="stylesheet" href="../../public/layui/css/layui.css">
 
- 
-	</style>
 
-</head>
-<body id="body">
     <div class="layui-header">
         <div class="layui-logo">layui 后台布局</div>
         <!-- 头部区域（可配合layui已有的水平导航） -->
@@ -47,9 +36,7 @@
 
     
     
-</body>
-<script src="../jquery.js"></script>
-<script src="../../public/layui/layui.all.js"></script>
+
 <script>
 
 let userInforTpl = `
@@ -79,9 +66,9 @@ let userInforTpl = `
         </form>`;
 
    window.onload = function(){
-    let userInfor =JSON.parse( localStorage.getItem('userInfor') || '{}');
+    let userInfor =  JSON.parse(localStorage.getItem('userInfor') || '{}');
     let avatar = userInfor.avatar || '/public/images/default.png'
-  
+     console.log(userInfor);
     // 设置用户信息
     document.getElementById('username').innerHTML = userInfor.username;
     document.getElementById('avatar').src = avatar;
@@ -102,8 +89,7 @@ let userInforTpl = `
       location.href = '/login'
     })
   }
-    })
-  }
+  
 
 
 
@@ -125,25 +111,28 @@ let userInforTpl = `
      })
    }
 
-window['showUserInfor'] = showUserInfor
+window['updUserInfor'] = updUserInfor
 
+  })}
   function initUpload(upload,layer){
     var uploadSub = upload.render({
       elem: '#uploadAvatar'
       ,url: '/upload'
       ,done: function(res){
+        console.log(res);
         if(res.code == 0){
+        
           let src = res.src;
           $('#userInforTpl #avatar-preview').attr('src',src)
 
           $.post('/updateAvatar',{avatar:src},(res)=>{
             let {code,message} = res;
+           
             if(code == 0){
               layer.msg(message);
               $('#avatar').attr('src',src);
               // 更改本地头像
               let oldUserInfor = JSON.parse(localStorage.getItem('userInfor') || '{}')
-
               oldUserInfor.avatar = src;
               localStorage.setItem('userInfor',JSON.stringify(oldUserInfor))
 
@@ -156,4 +145,3 @@ window['showUserInfor'] = showUserInfor
 
 
 </script>
-</html>

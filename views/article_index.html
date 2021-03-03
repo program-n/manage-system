@@ -1,14 +1,20 @@
-layui.code
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>layout 后台大布局 - Layui</title>
   <link rel="stylesheet" href="../public/css/nprogress.css">
-  <link rel="stylesheet" href="./public/layui/css/layui.css">
-  <link rel="stylesheet" href="/public/css/lightbox.css">
+  <link rel="stylesheet" href="/public/layui/css/layui.css">
+  <link rel="stylesheet" href="../public/css/lightbox.css">
+  <script src="../public/js/moment.js"></script>
+  <script src="../public/js/jquery.js"></script>
+  <script src="/public/layui/layui.js"></script>
+  <script src="../public/js/util.js"></script>
+  <script src="../public/js/nprogress.js"></script>
+  <script src="../public/lightbox(图片灯箱)/js/lightbox-plus-jquery.min.js"></script>
 </head>
 
 <body class="layui-layout-body">
@@ -26,128 +32,199 @@ layui.code
       <h1>文章管理</h1>
       <!-- 内容主体区域 -->
     
-      <!-- <script type="text/html" id="barDemo">
-      <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-      <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-      <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script> -->
-
-
-    <script type="text/html" id="leftContent">
-      <div  style="display:flex;">
-          <button type="button" id="add" style="margin-right:50px"  class="layui-btn layui-btn-normal">
-              <i class="layui-icon">&#xe608;</i> 添加文章
-          </button>
-
-          <div class="layui-form-item">
-              <label class="layui-form-label">标题</label>
-              <div class="layui-input-inline">
-                <input type="text" name="title" id="title" required placeholder="请输入标题" autocomplete="off" class="layui-input">
-              </div>
-          </div>
-
-          <div class="layui-form-item">
-              <label class="layui-form-label">状态</label>
-              <div class="layui-input-inline">
-                <select id="status" name="status" lay-verify="required">
-                  <option value="">全部</option>
-                  <option value="0">未发布</option>
-                  <option value="1">已发布</option>
-                  <option value="2">不通过</option>
-                </select>
-              </div>
-            </div>
-       
-        <button class="layui-btn" id="search">搜索</button>
+      <table class="layui-hide" id="test" lay-filter="test"></table>
       </div>
+
+      <!-- <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="show">查看内容</a>
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+      </script> -->
+
+      <script type="text/html" id="leftContent">
+        <div  style="display:flex;">
+            <button type="button" id="add" style="margin-right:50px"  class="layui-btn layui-btn-normal">
+                <i class="layui-icon">&#xe608;</i> 添加文章
+            </button>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题</label>
+                <div class="layui-input-inline">
+                  <input type="text" name="title" id="title" required placeholder="请输入标题" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                  <select id="status" name="status" lay-verify="required">
+                    <option value="">全部</option>
+                    <option value="0">未发布</option>
+                    <option value="1">已发布</option>
+                    <option value="2">不通过</option>
+                  </select>
+                </div>
+              </div>
+         
+          <button class="layui-btn" id="search">搜索</button>
+        </div>
+      </script>
+
+
     </div>
+
     <!-- 引入头部导航栏 -->
     {{include'./common/footer.html' }}
 
   </div>
-  <script src="/public/js/moment.js"></script>
-  <script src="/public/js/jquery.js"></script>
-  <script src="./public/layui/layui.js"></script>
-  <script src="/public/js/util.js"></script>
-  <script src="/public/js/nprogress.js"></script>
-  <script src="/public/js/lightbox-plus-jquery.min.js"></script>
+  
+</body>
   <script>
 
-    NProgress.set(0.3)
-    let interval = setInterval(function () {
-      NProgress.inc();
-    }, 500)
-    $(window).on('load', () => {
-      clearInterval(interval)
-      NProgress.done();
-    })
+    // NProgress.set(0.3)
+    // let interval = setInterval(function () {
+    //   NProgress.inc();
+    // }, 500)
+    // $(window).on('load', () => {
+    //   clearInterval(interval)
+    //   NProgress.done();
+    // })
     //JavaScript代码区域
     layui.use(['element', 'table'], function () {
       var element = layui.element;
       var table = layui.table;
 
       let tableUI = table.render({
-        elem: '#demo'
-        , height: 312
-        , id:'testReload'
-        , url: '/artTab' //数据接口
-        , page: true //开启分页
-        , cols: [[ //表头
-          { field: 'art_id', title: 'ID', width: 80, sort: true, fixed: 'left' }
-          , { field: 'title', title: '标题', width: 80 }
-          , { field: 'content', title: '内容', width: 80, hide: true }
-          , { field: 'cat_id', title: '所属分类', width: 80, sort: true }
-          , { field: 'author', title: '作者', width: 80 }
-          , {
-            field: 'cover', title: '封面', width: 177,
-            templet({ cover }) {
-              let imgStr = `<a class="example-image-link" href="${cover}" data-lightbox="example-1"></a>`
-              return imgStr
-            },
-          }
-          , {
-            field: 'status', title: '状态', width: 80, sort: true, templet: (item) => {
-              let statusMap = {
-                '0': '<span class="layui-badge layui-bg-blue">未发布</span>',
-                '1': '<span class="layui-badge layui-bg-green">已发布(通过)</span>',
-                '2': '<span class="layui-badge layui-bg-red">不通过</span>'
+        elem: '#test',
+        url: '/artTab',
+        cellMinWidth: 100,
+        id:"testReload",
+        toolbar: '#leftContent' //开启头部工具栏，并为其绑定左侧模板
+          ,
+        defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+          title: '提示',
+          layEvent: 'LAYTABLE_TIPS',
+          icon: 'layui-icon-tips'
+        }],
+        limit: 5,
+        limits: [5, 10, 15, 20],
+        request: {
+          pageName: 'page' //页码的参数名称，默认：page
+            ,
+          limitName: 'limit' //每页数据量的参数名，默认：limit
 
+        },
+        where: {
+          a: 2,
+          b: 3
+        },
+        title: '文章数据',
+        cols: [
+          [{
+            type: 'checkbox',
+            fixed: 'left'
+          }, {
+            field: 'art_id',
+            title: 'ID',
+            width: 80,
+            fixed: 'left',
+            unresize: true,
+            hide:true
+          }, {
+            field: 'title',
+            title: '标题',
+            width: 120,
+            edit: 'text'
+          }, {
+            field: 'content',
+            title: '内容',
+            width: 120,
+            hide:true
+          }, {
+            field: 'name',
+            title: '所属分类',
+            width: 100
+          }, {
+            field: 'author',
+            title: '作者',
+            width: 80,
+            edit: 'text',
+            sort: true
+          }, {
+            field: 'cover',
+            title: '封面',
+            width: 100,
+            templet({cover}){
+              let imgStr = `<a class="example-image-link" href="${cover}" data-lightbox="example-1" data-title="我帅木">
+                        <img class="example-image" src="${cover}" alt="暂无图片" />
+                    </a>`;
+              return imgStr;
+            }
+          }, {
+            field: 'status',
+            title: '状态',
+            width: 100,
+            templet: (item) => {
+              // 映射关系 或 new Map也行
+              let statusMap = {
+                "0": '<span class="layui-badge layui-bg-blue">未发布</span>',
+                "1": "<span class='layui-badge layui-bg-green'>已发布(通过)</span>",
+                "2": "<span class='layui-badge' style='background:red'>不通过</span>"
               }
               return statusMap[item.status]
             }
-          }
-          , { field: 'publish_data', title: '发布时间', width: 80, sort: true }
-          , {
-            field: 'right', title: '操作', width: 135,
-            templet({ status }) {
-              let str = `<a class="layui-btn layui-btn-xs" lay-event="show">查看</a>`
-
-              switch (status) {
-                case 0:
-                  str += ` <a class="layui-btn layui-bg-orange layui-btn-xs" lay-event="verify">审核中-${status}</a>`
+          }, {
+            field: 'publish_date',
+            title: '发布时间',
+            sort: true,
+            templet(item) {
+              let {
+                publish_date
+              } = item;
+              return util.date_format(publish_date)
+            }
+          }, {
+            fixed: 'right',
+            title: '操作',
+            // toolbar: '#barDemo',
+            templet({status}){
+              let temStr = `<a class="layui-btn layui-btn-xs" lay-event="show">查看内容</a>`;
+              // 当前状态是0，说明是未发布，我们可以对其进行审核
+              switch(status){
+                case 0: // 未发布 
+                  temStr += `<a class="layui-btn layui-btn-xs layui-bg-orange" lay-event="verify">待审核</a>`
                   break;
-
+                default:
+                  break;
               }
 
-
-
-              str = `
-            <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
-           <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-           <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            `
-              return str
+               temStr += ` 
+                  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>`
+              return temStr;
             }
+          }]
+        ],
+        page: true,
+        parseData: function (res) {
+            // 可以对返回的数据格式进行调整，修改符合table所需要的的格式
+            // console.log(res);// 后台接口原数据
+            return res;
           }
-        ]],
+          // 如果后台接口返回的参数table参数不一致，可以在这里重新定义
+          ,
+        response: {},
+        text: {
+          none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+        }
       });
       //监听工具条 
       table.on('tool(test)', function (obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
         let { data, event } = obj;
-        let { art_id, content } = data
+        let { art_id, content,title } = data
         switch (event) {
           case ' del':
-            del()
+            del(art_id)
             break;
           case 'edit':
             edit(art_id)
@@ -156,7 +233,7 @@ layui.code
             verify(art_id)
             break;
           case 'show':
-            showContent(content)
+            showContent(title,content)
             break
         }
 
@@ -169,8 +246,8 @@ layui.code
             type: 'post',
             url: '/delArt',
             data: { art_id },
-            success(res) {
-              let { errcode, messasge } = res;
+            success(errcode,message) {
+
               layer.closeAll();
               if (errcode == 0) {
                 tableUI.reload();
@@ -200,12 +277,13 @@ layui.code
             tableUI.reload();
 
           }
-          layer.msg()
-        })
+          layer.msg(message)
+        },"json")
       }
       // 查看内容
-      function showContent(content) {
+      function showContent(title,content) {
         layer.open({
+          title:title,
           type: 1,
           skin: 'layui-layer-rim',
           area: ['1000px', '800px'],
@@ -239,6 +317,4 @@ layui.code
     });
 
   </script>
-</body>
-
 </html>

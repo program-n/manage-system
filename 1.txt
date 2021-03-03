@@ -1,0 +1,86 @@
+   let url = location.href;
+  let reg = /art_id=(.*)&?/;
+  // [...伪数组] =》 转化为真数组
+  // [,cat_id]： 解构：舍去第一个参数，要第二个参数
+  let [,art_id] = [...reg.exec(url)]
+
+
+    const E = window.wangEditor
+    const editor = new E("#content")
+    // 或者 const editor = new E(document.getElementById('div1'))
+    editor.config.uploagImgShowBase64 = true;
+    editor.create()
+ 
+    layui.use(['element','form','layer','upload'], function(){
+  var element = layui.element;
+  var layer = layui.layer;
+
+  var form = layui.form;
+  var upload = layui.upload;
+   
+  //执行实例
+  var uploadInst = upload.render({
+    elem: '#cover_img_upload' //绑定元素
+    ,url: '/upload/' //上传接口
+    ,done: function({code,message,src}){
+      //上传完毕回调
+      if(code == 0){
+        // 1.图片预览 2.把图片路径设置到表单隐藏域提交到后台
+        console.log(src);
+        $('#cover-preview').attr('src',src).css('width','100')
+        $("input[name='cover']").val(src)
+      }
+    }
+    ,error: function(){
+      //请求异常回调
+    }
+  });
+
+
+      form.on('submit(formDemo)', function (data) {
+        let formData = data.field;
+        formData.content = editor.txt.html();
+        formData.art_id = art_id;
+        formData.oldCover = oldCover;
+        $.post('/updArt', formData, ({ errcode, message }) => {
+          if (errcode == 3) {
+            location.href = '/article_index'
+          }
+          layer.msg(message)
+        }, 'json')
+        return false
+      })
+
+
+      // 请求数据
+      function loadAll() {
+        $.get('/getCateData', (res) => {
+          let op = `<option lay-value=""></option>`
+          res.forEach(v => {
+            op += `<option lay-value="${v.cat_id}">${v.name}</option>`
+
+          })
+          $("#cat_id").html(op)
+          form.render()
+
+          getNow()
+
+        }, 'json')
+      }
+      loadAll()
+let oldCover;
+      function getNow() {
+        $.get('/getOneArt', { art_id }, (res) => {
+          let { title, content, status, cover, cat_id } = res;
+          cover && $('#cover-preview').attr('src', cover)
+          oldCover = cover;
+          editor.txt.html(content)
+          form.val('formDemo', {
+            title,
+            status,
+            cat_id
+          })
+        },'json')
+      }
+    
+    })

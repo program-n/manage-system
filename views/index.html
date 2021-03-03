@@ -1,20 +1,20 @@
-layui.code
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <title>layout 后台大布局 - Layui</title>
-  <link rel="stylesheet" href="./public/layui/css/layui.css">
+  <link rel="stylesheet" href="../public/layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
  
     <!-- 引入头部导航栏 -->
-    {{include'./common/head.html' userInfor}}
+    {{ include './common/head.html'  }}
 
  <!-- 引入侧边导航栏 -->
-  {{include'./common/side.html' }}
+  {{include './common/side.html' }}
 
 
   <div class="layui-body">
@@ -27,11 +27,16 @@ layui.code
   </div>
   </div>
    <!-- 引入头部导航栏 -->
-   {{include'./common/footer.html' }}
+   {{include './common/footer.html' }}
  
 </div> 
-<script src="/public/layui/layui.js"></script>
-<script src="./public/js/echarts.js"></script>
+
+<script src="../public/js/moment.js"></script>
+<script src="../public/js/jquery.js"></script>
+<script src="../public/js/nprogress.js"></script>
+<script src="../public/js/util.js"></script>
+<script src="/public/layui/layui.all.js"></script>
+<script src="../public/js/echarts.min.js"></script>
 <script>
 //JavaScript代码区域
 layui.use('element', function(){
@@ -46,20 +51,20 @@ $.get('/artCount',(res)=>{
   let months = []; // 保存分类名称
   let totals = []; // 保存文章分类的总文章数
   res.map(v=>{
-   names.push(v.months + '月');
+   months.push(v.month + '月');
    totals.push(v.total)
   })
  let dom = document.getElementById("art")
- let text = '文章分类统计'
+ let text = '每月文章统计'
  initEchart(dom,months,totals,text,'bar');
 })
 
 $.get('/cateCount',(res)=>{
-  
      let names = []; // 保存分类名称
      let totals = []; // 保存文章分类的总文章数
      res.map(v=>{
       names.push(v.name);
+     
       totals.push(v.total)
      })
     let dom = document.getElementById("cate")

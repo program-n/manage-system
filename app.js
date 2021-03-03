@@ -3,8 +3,12 @@ const path = require('path');
 const app = express();
 
 let session = require('express-session');
+// 设置跨域
+let cors = require('cors')
+app.use(cors())
 
 // 导入路由模块
+const apiRouter = require('./router/apiRouter.js')
 const router = require('./router/router.js')
 
 app.use(express.json()) // for parsing application/json
@@ -19,7 +23,7 @@ const artTemplate = require('art-template');
 const express_template = require('express-art-template');
 
 //配置模板的路径
-app.set('views', __dirname + '/views/');
+app.set('views',__dirname  +'/views');
 
 //设置express_template模板引擎的静态文件扩展名为.html
 app.engine('html', express_template); 
@@ -28,6 +32,7 @@ app.engine('html', express_template);
 app.set('view engine', 'html');
 
 
+app.use('/api',apiRouter)
 
 let options = {
     name :"session",
@@ -39,9 +44,11 @@ let options = {
     }
 }
 app.use(session(options))
+// 前台路由
+
 app.use(function(req,res,next){
     let path = req.path.toLowerCase();
-
+    // console.log(path)
     let unNeed = ['/login','/signin','/logout'];
     if(unNeed.includes(path)){
         next();
@@ -50,10 +57,8 @@ app.use(function(req,res,next){
            next()
         }else{
             res.redirect('/login')
-            next()
         }
     }
- 
 })
 
 
